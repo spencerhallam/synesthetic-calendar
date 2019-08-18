@@ -229,7 +229,7 @@ const node = svg
    .data(graph.nodes)
    .enter()
    .append("circle")
-   .attr("r", 1000)
+   .attr("r", 2000)
    .attr("fill", d => myColor(d.group))
    //.attr("fill", d => color(d.group))
    .call(
