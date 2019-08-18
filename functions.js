@@ -137,7 +137,7 @@ const graph = {
 console.log("Graph.nodes", graph.nodes)
 
 const width = 90000
-const height = 90000
+const height = 70000
 const svg = d3
    .select("#chart-area")
    .append("svg")
@@ -242,7 +242,7 @@ const node = svg
 
 // Basic tooltips
 node.append("title").text(d => d.id);
-node.append("text").text(d => d.id)
+
 
 // Attach nodes to the simulation, add listener on the "tick" event
 simulation
