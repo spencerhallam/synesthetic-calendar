@@ -6,47 +6,138 @@
 * simulated forces using d3-force.
 */
 //value = weight of the connecting lines
-const graph = {
-  "nodes": [
-    {"id": "Jan_01", "group": 1},
-    {"id": "Jan_02", "group": 1},
-    {"id": "Jan_03", "group": 1},
-    {"id": "Feb_01", "group": 2},
-    {"id": "Feb_02", "group": 2},
-    {"id": "Feb_03", "group": 2},
-    {"id": "Mar_01", "group": 3},
-    {"id": "Apr_01", "group": 4},
-    {"id": "May_01", "group": 5},
-    {"id": "Jun_01", "group": 6},
-    {"id": "Jul_01", "group": 7},
-    {"id": "Aug_01", "group": 8},
-    {"id": "Sep_01", "group": 9},
-    {"id": "Oct_01", "group": 10},
-    {"id": "Nov_01", "group": 11},
-    {"id": "Dec_01", "group": 12}
-  ],
-  "links": [
-    {"source": "Jan_01", "target": "Jan_02", "value": 1},
-    {"source": "Jan_02", "target": "Jan_03", "value": 1},
-     {"source": "Jan_03", "target": "Feb_01", "value": 1},
-    {"source": "Feb_01", "target": "Feb_02", "value": 1},
-    {"source": "Feb_02", "target": "Feb_03", "value": 1},
-    {"source": "Feb_03", "target": "Mar_01", "value": 1}, 
-     {"source": "Mar_01", "target": "Apr_01", "value": 1},
-    {"source": "Apr_01", "target": "May_01", "value": 1},
-     {"source": "May_01", "target": "Jun_01", "value": 1},
-    {"source": "Jun_01", "target": "Jul_01", "value": 1},
-     {"source": "Jul_01", "target": "Aug_01", "value": 1},
-     {"source": "Aug_01", "target": "Sep_01", "value": 1},
-     {"source": "Sep_01", "target": "Oct_01", "value": 1},
-     {"source": "Oct_01", "target": "Nov_01", "value": 1},
-     {"source": "Nov_01", "target": "Dec_01", "value": 1},
-     {"source": "Dec_01", "target": "Jan_01", "value": 8}
-  ]
+
+function SynYear () {}
+
+function SynMonth (name, shortName, qtyDays, color, order, season) {
+    this.name = name;
+    this.shortName = shortName;
+    this.qtyDays = qtyDays;
+    this.color = color;
+    this.order = order;
+    this.season = season;
+    this.getInfo = getInfo;
+    this.monthData = monthData;
+}
+// anti-pattern! keep reading...
+function getInfo() {
+    return this.name + ' is month #' + this.order + ' and has ' + this.qtyDays + ' days and will be ' + this.color + ' indicating the ' + this.season + ' season.';
+}
+function monthData() {
+    let monthMap = [];
+    for(let i = 0; i < this.qtyDays; i++){
+        let mapObj = `{ "id": "${this.shortName}_${i + 1}", "group": ${this.order}}`
+        let parsedMap = JSON.parse(mapObj);
+        monthMap.push(parsedMap);
+    }
+
+    return monthMap;
 }
 
-const width = 600
-const height = 400
+const jan = new SynMonth('January', 'Jan', 31, 'blue', 1, 'winter');
+const feb = new SynMonth('February', 'Feb', 28, 'blue', 2, 'winter');
+const mar = new SynMonth('March', 'Mar', 31, 'blue', 3, 'winter');
+const apr = new SynMonth('April', 'Apr', 30, 'blue', 4, 'spring');
+const may = new SynMonth('May', 'May', 31, 'blue', 5, 'spring');
+const jun = new SynMonth('June', 'Jun', 30, 'blue', 6, 'spring');
+const jul = new SynMonth('July', 'Jul', 31, 'blue', 7, 'summer');
+const aug = new SynMonth('August', 'Aug', 31, 'blue', 8, 'summer');
+const sep = new SynMonth('September', 'Sep', 30, 'blue', 9, 'summer');
+const oct = new SynMonth('October', 'Oct', 31, 'blue', 10, 'fall');
+const nov = new SynMonth('November', 'Nov', 30, 'blue', 11, 'fall');
+const dec = new SynMonth('December', 'Dec', 31, 'blue', 12, 'fall');
+
+const allYear = function() { 
+  const sumDays = [];  
+  let allMoDays = [
+    jan.monthData(), 
+    feb.monthData(), 
+    mar.monthData(), 
+    apr.monthData(), 
+    may.monthData(), 
+    jun.monthData(), 
+    jul.monthData(), 
+    aug.monthData(), 
+    sep.monthData(), 
+    oct.monthData(), 
+    nov.monthData(), 
+    dec.monthData()
+];
+
+function maker(item){
+    const makerString = [];
+    for(let i = 0; i < item.length; i++){
+        console.log("TESTTEST01", item[i]);
+        if(item[i].id === "Aug_18"){
+            console.log("Aug 18 is found!");
+            let today = `{"id": "${item[i].id}","group": 13}`;
+            console.log("TESTTEST02", today);
+            makerString.push(today);
+        } else {
+            console.log("TESTTEST03", item[i].id);
+          makerString.push(JSON.stringify(item[i]));
+        }
+    }
+    sumDays.push(makerString);
+}
+
+allMoDays.forEach(maker)
+const finalString = sumDays.join(',')
+console.log('tester:', sumDays);
+// console.log('tester2:', finalString);
+let finalArrayString = "[" + finalString + "]";
+// console.log('Pre-Parsed JSON', finalArrayString);
+let yoyo = JSON.parse(finalArrayString);
+// console.log("Parsed JSON", yoyo)
+
+return yoyo
+} //end all Year
+
+const allYearObj = allYear();
+
+const dayNodeLinks = function(somearray){
+    const linkArray = [];
+    somearray.forEach(maker2);
+    function maker2(item, i){
+      
+      let next = i + 1;
+      let nextItem = (allYearObj[next]) ? allYearObj[next].id : allYearObj[0].id;
+    //   let nextItemChk = (item.id === 'Dec_31') ? "Jan_1" : nextItem;
+    //   console.log("ITEM.ID", item.id);
+    //   console.log("JUST I", i);
+    //   console.log("next Item", nextItem)
+      let oneLink = `{"source": "${item.id}", "target": "${nextItem}", "value": 1 }`
+      linkArray.push(oneLink)
+    //   console.log('linkArray1', linkArray);
+    //   console.log("rrr", oneLink);
+      return true
+    }
+    console.log("LINKARRAY", linkArray)
+    const linkString = linkArray.join(',')
+    console.log('LINKARRAYtester3:', linkArray);
+    console.log('LINKARRAYtester4:', linkString);
+    let finalLinkString = "[" + linkString + "]";
+    console.log('Pre-Parsed LINK JSON', finalLinkString);
+    let yoyo2 = JSON.parse(finalLinkString);
+    console.log("Parsed LINK JSON", yoyo2)
+    
+
+    return yoyo2
+}
+
+const allDayNodeLinks = dayNodeLinks(allYear());
+
+//D3 Script
+
+const graph = {
+     "nodes": allYearObj,
+     "links": allDayNodeLinks,
+}
+
+console.log("Graph.nodes", graph.nodes)
+
+const width = 90000
+const height = 90000
 const svg = d3
    .select("#chart-area")
    .append("svg")
@@ -59,9 +150,10 @@ const color = d3.scaleOrdinal(d3.schemeCategory10)
 // Add "forces" to the simulation here
 const simulation = d3.forceSimulation()
    .force("center", d3.forceCenter(width / 2, height / 2))
-   .force("charge", d3.forceManyBody().strength(-50))
-   .force("collide", d3.forceCollide(10).strength(0.9))
-   .force("link", d3.forceLink().id(d => d.id))
+   .force("charge", d3.forceManyBody().strength(-2000))
+   .force("collide", d3.forceCollide(350).strength(0.0))
+   .force("link", d3.forceLink().id(d => d.id).distance(.01).strength(2))
+
 
 // Change the value of alpha, so things move around when we drag a node
 const onDragStart = d => {
@@ -108,8 +200,28 @@ const link = svg
    .enter()
    .append("line")
    .attr("stroke-width", d => Math.sqrt(d.value))
+//colors
+var myColor = d3.scaleOrdinal().domain(graph.nodes)
+  .range([
+   "hsl(180, 100%, 80%)",
+   "hsl(180, 100%, 50%)",
+   "hsl(170, 100%, 50%)",
+   "hsl(160, 100%, 50%)",
+   "hsl(70, 100%, 50%)",
+   "hsl(80, 100%, 50%)",
+   "hsl(80, 100%, 30%)",
+   "hsl(40, 100%, 50%)",
+   "hsl(20, 100%, 50%)",
+   "hsl(40, 100%, 100%)",
+   "hsl(20, 30%, 50%)",
+   "hsl(40, 30%, 50%)",
+   "hsl(0, 0%, 80%)",
+]);
+// gradient
+// var myColor = d3.scaleLinear().domain([1,10])
+//   .range(["yellow", "blue"])
 
-// Add circles for every node in the dataset
+  // Add circles for every node in the dataset
 const node = svg
    .append("g")
    .attr("class", "nodes")
@@ -117,8 +229,9 @@ const node = svg
    .data(graph.nodes)
    .enter()
    .append("circle")
-   .attr("r", 5)
-   .attr("fill", d => color(d.group))
+   .attr("r", 1000)
+   .attr("fill", d => myColor(d.group))
+   //.attr("fill", d => color(d.group))
    .call(
       d3
          .drag()
@@ -128,7 +241,8 @@ const node = svg
    )
 
 // Basic tooltips
-node.append("title").text(d => d.id)
+node.append("title").text(d => d.id);
+node.append("text").text(d => d.id)
 
 // Attach nodes to the simulation, add listener on the "tick" event
 simulation

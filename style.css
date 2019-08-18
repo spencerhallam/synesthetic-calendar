@@ -23,6 +23,7 @@ svg {
 }
 
 .nodes circle {
-	stroke: #333;
+    stroke: #333;
+    /* fill: yellow; */
 	stroke-width: 1.5px;
 }
