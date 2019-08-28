@@ -68,8 +68,8 @@ function maker(item){
     const makerString = [];
     for(let i = 0; i < item.length; i++){
         console.log("TESTTEST01", item[i]);
-        if(item[i].id === "Aug_18"){
-            console.log("Aug 18 is found!");
+        if(item[i].id === "Aug_28"){
+            console.log("Aug 28 is found!");
             let today = `{"id": "${item[i].id}","group": 13}`;
             console.log("TESTTEST02", today);
             makerString.push(today);
